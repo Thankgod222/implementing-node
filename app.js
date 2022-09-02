@@ -4,10 +4,16 @@ const express = require("express");
 const ejs = require("ejs");
 const mongoose = require("mongoose");
 const session = require("express-session");
+const path = require("path");
 const bodyParser = require("body-parser");
+// const cloudinary = require("cloudinary");
+// const { CloudinaryStorage } = require("multer-storage-cloudinary");
 const multer = require("multer");
+const { storage } = require("./cloudinary/index");
+const upload = multer({ storage });
+// const upload = multer({ dest: "uploads" });
 const Portfolio = require("./model/Portfolio");
-const { cloudinary } = require("./cloudinary");
+
 const app = express();
 
 app.use(express.json());
@@ -24,6 +30,8 @@ db.once("open", function () {
 });
 
 app.use(express.static("public"));
+app.use(express.urlencoded({ extended: true }));
+// app.use("/uploads", express.static("uploads"));
 
 app.set("view engine", "ejs");
 
@@ -37,6 +45,8 @@ app.use(
   })
 );
 
+// const upload = multer({ storage });
+
 app.get("/", function (req, res) {
   Portfolio.find({}, (error, port) => {
     if (error) {
@@ -48,14 +58,23 @@ app.get("/", function (req, res) {
   });
 });
 
-app.route("/add").post(function (req, res) {
+app.route("/update").post(upload.single("image"), function (req, res) {
+  // console.log(req.file, req.body);
+  console.log(req.file.path);
+  res.send("IT Worked?!");
+});
+
+app.route("/add").post(upload.single("image"), function (req, res) {
   // CREATING A NEW OBJECT FROM THE PARAMETER PASSES TO THE API
+
+  let tags = JSON.parse(req.body.tag);
+
   const newPortfolio = new Portfolio({
     name: req.body.name,
     description: req.body.description,
     category: req.body.category,
-    image: req.body.image,
-    tag: req.body.tag,
+    image: req.file.path,
+    tag: tags,
   });
 
   newPortfolio.save(function (err) {
@@ -72,7 +91,7 @@ app.route("/update/:portfolioName").put(function (req, res) {
   Portfolio.updateOne(
     { name: req.params.portfolioName },
     { name: req.body.name, description: req.body.description },
-    // { overwrite: true },
+
     function (err) {
       if (!err) {
         res.send("Successfully updated the content of the selected article.");

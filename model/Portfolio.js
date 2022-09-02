@@ -1,13 +1,13 @@
 const mongoose = require("mongoose");
 
-const ImageSchema = new Schema({
-  url: String,
-  filename: String,
-});
+// const ImageSchema = new mongoose.Schema({
+//   url: String,
+//   filename: String,
+// });
 
-ImageSchema.virtual("thumbnail").get(function () {
-  return this.url.replace("/upload", "/upload/w_200");
-});
+// ImageSchema.virtual("thumbnail").get(function () {
+//   return this.url.replace("/upload", "/upload/w_200");
+// });
 
 const portfolioSchema = new mongoose.Schema({
   name: {
@@ -22,9 +22,14 @@ const portfolioSchema = new mongoose.Schema({
     type: String,
     required: "This field is required.",
   },
-  images: [ImageSchema],
-  tag: {
+  image: {
     type: String,
+    required: "This field is required.",
+  },
+  // images: [ImageSchema],
+
+  tag: {
+    type: Array,
     required: "This field is required.",
   },
 });
