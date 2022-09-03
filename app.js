@@ -6,12 +6,9 @@ const mongoose = require("mongoose");
 const session = require("express-session");
 const path = require("path");
 const bodyParser = require("body-parser");
-// const cloudinary = require("cloudinary");
-// const { CloudinaryStorage } = require("multer-storage-cloudinary");
 const multer = require("multer");
 const { storage } = require("./cloudinary/index");
 const upload = multer({ storage });
-// const upload = multer({ dest: "uploads" });
 const Portfolio = require("./model/Portfolio");
 
 const app = express();
@@ -31,7 +28,6 @@ db.once("open", function () {
 
 app.use(express.static("public"));
 app.use(express.urlencoded({ extended: true }));
-// app.use("/uploads", express.static("uploads"));
 
 app.set("view engine", "ejs");
 
@@ -45,8 +41,6 @@ app.use(
   })
 );
 
-// const upload = multer({ storage });
-
 app.get("/", function (req, res) {
   Portfolio.find({}, (error, port) => {
     if (error) {
@@ -59,7 +53,6 @@ app.get("/", function (req, res) {
 });
 
 app.route("/update").post(upload.single("image"), function (req, res) {
-  // console.log(req.file, req.body);
   console.log(req.file.path);
   res.send("IT Worked?!");
 });
@@ -80,7 +73,7 @@ app.route("/add").post(upload.single("image"), function (req, res) {
   newPortfolio.save(function (err) {
     // res.send(err);
     if (!err) {
-      res.send("Successfully added a new article.");
+      res.send("Successfully added a new portfolio item.");
     } else {
       res.status(400).send(err);
     }
@@ -94,7 +87,9 @@ app.route("/update/:portfolioName").put(function (req, res) {
 
     function (err) {
       if (!err) {
-        res.send("Successfully updated the content of the selected article.");
+        res.send(
+          "Successfully updated the content of the selected portfolio item."
+        );
       } else {
         res.send(err);
       }
@@ -106,7 +101,7 @@ app.route("/update/:portfolioName").put(function (req, res) {
 app.route("/delete/:portfolioName").delete(function (req, res) {
   Portfolio.deleteOne({ name: req.params.portfolioName }, function (err) {
     if (!err) {
-      res.send("Successfully deleted all articles.");
+      res.send("Successfully deleted portfolio item by portfolio name.");
     } else {
       res.send(err);
     }
