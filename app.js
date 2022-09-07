@@ -60,24 +60,40 @@ app.route("/update").post(upload.single("image"), function (req, res) {
 app.route("/add").post(upload.single("image"), function (req, res) {
   // CREATING A NEW OBJECT FROM THE PARAMETER PASSES TO THE API
 
-  let tags = JSON.parse(req.body.tag);
 
-  const newPortfolio = new Portfolio({
-    name: req.body.name,
-    description: req.body.description,
-    category: req.body.category,
-    image: req.file.path,
-    tag: tags,
-  });
+let name = req.body.name;
+var description = req.body.description;
+var category = req.body.category;
+var image  = req.body.image;
+let tags = JSON.parse(req.body.tag);
+
+
+if (name == "" || description == "" || category == "" || image == "" || tags == "" ) {
+  res.send("empty cant proceed")
+} else {
+
+
+
+const newPortfolio = new Portfolio({
+  name: req.body.name,
+  description: req.body.description,
+  category: req.body.category,
+  image: req.file.path,
+  tag: tags,
+});
 
   newPortfolio.save(function (err) {
     // res.send(err);
     if (!err) {
       res.send("Successfully added a new portfolio item.");
     } else {
-      res.status(400).send(err);
+      
+      res.status(400).send(err.message);
     }
   });
+}
+
+
 });
 
 app.route("/update/:portfolioName").put(function (req, res) {
