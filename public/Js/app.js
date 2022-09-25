@@ -5,6 +5,19 @@ const typed = new Typed(".home-subname", {
   loop: true,
 });
 
+// Nav Active Menu
+const li = document.querySelectorAll(".nav-link");
+const sec = document.querySelectorAll("section");
+
+function activeMenu() {
+  let len = sec.length;
+  while (--len && window.scrollY + 90 < sec[len].offsetTop) {}
+  li.forEach(ltx => ltx.classList.remove("active"));
+  li[len].classList.add("active");
+}
+activeMenu();
+window.addEventListener("scroll", activeMenu);
+
 // SERVICES MODAL
 const modalViews = document.querySelectorAll(".services-modal"),
   modalBtns = document.querySelectorAll(".services-button"),
