@@ -566,7 +566,7 @@ img {
 }
 
 .services-modal-content {
-    position: absolute;
+    position: relative;
     background-color: white;
     padding: 4.5rem 1.5rem 2.5rem;
     border-radius: 1.5rem;
