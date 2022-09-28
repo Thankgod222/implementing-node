@@ -29,6 +29,9 @@ db.once("open", function () {
 app.use(express.static("public"));
 app.use(express.urlencoded({ extended: true }));
 
+// necessary for templates
+app.set('views', __dirname + '/views');
+
 app.set("view engine", "ejs");
 
 app.use(bodyParser.urlencoded({ extended: true }));
