@@ -26,7 +26,12 @@ db.once("open", function () {
   console.log("connected");
 });
 
-app.use(express.static("public"));
+// app.use(express.static("public"));
+
+
+// defining and using static files(i.e html)
+app.use(express.static(path.join(__dirname, "../public")))
+
 app.use(express.urlencoded({ extended: true }));
 
 // necessary for templates
