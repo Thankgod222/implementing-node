@@ -30,7 +30,8 @@ db.once("open", function () {
 
 
 // defining and using static files(i.e html)
-app.use(express.static(path.join(__dirname, "../public")))
+// console.log(path.join(__dirname, "../public"))
+app.use(express.static(path.join(__dirname, "/public")))
 
 app.use(express.urlencoded({ extended: true }));
 
